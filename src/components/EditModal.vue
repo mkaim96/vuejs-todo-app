@@ -30,7 +30,7 @@ export default {
         },
 
         edit(event) {
-            this.$store.dispatch('EDIT', event.target.value)
+            this.$store.commit('edit', event.target.value)
         }
     },
 

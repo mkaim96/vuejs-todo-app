@@ -1,11 +1,13 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import axios from 'axios'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+
+    nextId: 1,
+
     todosFilter: 'ALL',
 
     editModalOpened: false,
@@ -16,8 +18,14 @@ export default new Vuex.Store({
   },
 
   mutations: {
-    addTodo(state, todo) {
-      state.todos.push(todo)
+    addTodo(state, newTodoText) {
+      if (newTodoText.length == 0) {
+        return
+      }
+
+      state.todos.push({id: state.nextId, text: newTodoText, completed: false})
+
+      state.nextId ++
     },
 
     removeTodo(state, todo) {
@@ -92,98 +100,5 @@ export default new Vuex.Store({
     notCompletedTodosCount(state) {
       return state.todos.filter(todo => todo.completed == false).length
     }
-  },
-
-  actions: {
-    RETRIEVE_TODOS(context) {
-      axios.get('http://localhost:64854/api/todos/get-all')
-        .then(res => {
-          if (res.status == 200) {
-            context.state.todos = res.data
-          }
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    },
-
-    ADD_TODO(context, todoText) {
-
-      if(todoText.trim().length < 1) {
-        return;
-      }
-
-      axios.post('http://localhost:64854/api/todos/create', {
-        text: todoText
-      })
-      .then(res => {
-        if (res.status == 200) {
-          context.commit('addTodo', res.data)  
-        } else {
-          alert("Coś poszło nie tak przy zapisywaniu zadania. Spróbuj jeszcze raz")
-        }
-      })
-      .catch(err => {
-        console.log(err)
-      })
-    },
-
-    REMOVE_TODO(context, todo) {
-      axios.delete(`http://localhost:64854/api/todos/delete/${todo.id}`)
-      .then(res => {
-        if(res.status == 200) {
-          context.commit('removeTodo', todo)
-        } else {
-          alert('Coś poszło nie tak przy usuwaniu zadania. Spróbuj jeszcze raz')    
-        }
-      })
-      .catch(err => {
-      console.log(err)
-      })
-    },
-
-    TOGGLE_COMPLETED(context, todo) {
-      axios.get(`http://localhost:64854/api/todos/toggle-completed/${todo.id}`)
-        .then(res => {
-          if (res.status == 200) {
-            context.commit('toggleCompleted', todo)
-          } else {
-            alert('Coś poszło nie tak. Spróbuj jeszcze raz')
-          }
-        })
-        .catch(err => {
-          console.log(err)
-        })
-    },
-
-    EDIT(context, newTodoText) {
-      axios.post('http://localhost:64854/api/todos/edit', {
-        todoId: context.state.editedTodo.id,
-        newTodoText: newTodoText
-      })
-      .then(res => {
-        if (res.status == 200) {
-          context.commit('edit', newTodoText)
-        } else {
-          alert('Coś poszło nie tak przy edytowaniu zadania. Spróbuj jeszcze raz.')
-        }
-      })
-      .catch(err => {
-        console.log(err)
-      })
-    },
-
-    LOGOUT(context) {
-      axios.get('http://localhost:64854/logout')
-      .then(() => {
-        // refresh the page
-        location = location
-      })
-      .catch(err => {
-        console.log(err)
-      })
-    }
-
-
   }
 })

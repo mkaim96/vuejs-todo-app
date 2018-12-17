@@ -1,9 +1,5 @@
 <template>
   <div id="app">
-    <div class="nav">
-      <a class="signout" @click.prevent="signOut">Wyloguj się</a>
-    </div>
-    
     <div class="container">
       
       <edit-modal />
@@ -22,12 +18,6 @@ export default {
     TodoList,
     EditModal
   },
-
-  methods: {
-    signOut() {
-      this.$store.dispatch("LOGOUT")
-    }
-  }
 }
 </script>
 
@@ -56,23 +46,5 @@ body {
   -webkit-box-shadow: 10px 9px 51px -7px rgba(0,0,0,0.75);
   -moz-box-shadow: 10px 9px 51px -7px rgba(0,0,0,0.75);
   box-shadow: 10px 9px 51px -7px rgba(0,0,0,0.75);
-}
-
-.signout {
-  color: #fff;
-  font-size: 22px;
-  transition: font-size .2s;
-}
-
-.signout:hover {
-  cursor: pointer;
-  font-size: 24px;
-}
-
-.nav {
-  max-width: 600px;
-  margin: 0 auto;
-  margin-bottom: 10px;
-  ;
 }
 </style>

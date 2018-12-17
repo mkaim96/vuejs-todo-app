@@ -68,7 +68,7 @@ export default {
     methods: {
 
         addTodo() {
-            this.$store.dispatch('ADD_TODO', this.newTodoText)
+            this.$store.commit('addTodo', this.newTodoText)
             this.newTodoText = ''
 
             if (this.todosFilter == 'COMPLETED') {
@@ -83,11 +83,11 @@ export default {
         },
 
         removeTodo(todo) {
-            this.$store.dispatch('REMOVE_TODO', todo)
+            this.$store.commit('removeTodo', todo)
         },
 
         toggleCompleted(todo) {
-            this.$store.dispatch('TOGGLE_COMPLETED', todo)
+            this.$store.commit('toggleCompleted', todo)
         },
 
         changeFilter(newFilter) {
@@ -95,10 +95,6 @@ export default {
         }
 
 
-    },
-
-    mounted(){
-        this.$store.dispatch('RETRIEVE_TODOS')
     }
 }
 </script>
